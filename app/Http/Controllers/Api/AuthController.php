@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +11,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email'    => 'required|email', 
             'password' => 'required',
         ]);
 
@@ -24,18 +23,11 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $abilities = ['ver'];
-
-        if ($request->permisos === 'escritura') {
-            $abilities = ['ver', 'crear', 'editar', 'eliminar'];
-        }
-
-        $token = $user->createToken('api-token', $abilities)->plainTextToken;
+        $token = $user->createToken('api-token', ['ver', 'crear', 'editar'])->plainTextToken;
 
         return response()->json([
             'usuario' => $user,
-            'token'   => $token,
-            'habilidades_del_token' => $abilities 
+            'token'   => $token
         ], 200);
     }
 
